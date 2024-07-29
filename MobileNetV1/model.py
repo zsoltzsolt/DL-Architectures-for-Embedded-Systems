@@ -1,6 +1,6 @@
 from torch import nn
 from torchsummary import summary
-
+from torchview import draw_graph
 
 class StandardConv(nn.Module):
     def __init__(self, in_channels, out_channel, stride=1):
@@ -64,3 +64,11 @@ class MobileNetV1(nn.Module):
 if __name__ == '__main__':
     model = MobileNetV1(in_channels=3, num_classes=10)
     summary(model, input_size=(3, 28, 28), device='cpu')
+
+    model_graph = draw_graph(model, input_size=(1, 3, 28, 28), device='meta')
+
+    # Save the graph using graphviz
+    dot = model_graph.visual_graph
+    dot.format = 'png'
+    dot.attr(dpi='300')
+    dot.render('mobilenetv1_graph')
